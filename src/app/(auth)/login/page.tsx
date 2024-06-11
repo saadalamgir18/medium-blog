@@ -2,6 +2,10 @@
 import { signIn, signOut, useSession } from "next-auth/react";
 import { redirect, useRouter } from "next/navigation";
 import { useState } from "react";
+import type {
+  GetServerSidePropsContext,
+  InferGetServerSidePropsType,
+} from "next";
 
 export default function Signin() {
   const session = useSession();
@@ -21,11 +25,6 @@ export default function Signin() {
         placeholder="name@email.com"
         onChange={(e) => {
           setEmail(e.target.value);
-          // setRequiredError((prevState) => ({
-          //   ...prevState,
-          //   emailReq: false,
-          // }));
-          // email.current = e.target.value;
         }}
       />
       <label>Password</label>
@@ -47,7 +46,7 @@ export default function Signin() {
           const res = await signIn("credentials", {
             email: email,
             password: password,
-            redirect: false,
+            redirect: true,
           });
           console.log(res);
           router.push("/");
@@ -85,7 +84,9 @@ export default function Signin() {
       >
         Login with email
       </button> */}
-      <div>{/* <button onClick={() => signOut()}>Sign out</button> */}</div>
+      <div>
+        <button onClick={() => signOut()}>Sign out</button>
+      </div>
     </div>
   );
 }

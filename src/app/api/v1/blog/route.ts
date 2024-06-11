@@ -1,14 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
-import { withAccelerate } from "@prisma/extension-accelerate";
+import { prisma } from "../../../../../prisma/prisma";
 
 export async function POST(req: NextRequest) {
   const request = await req.json();
 
   console.log("body", request);
-  const prisma = new PrismaClient({
-    datasourceUrl: process.env.DATABASE_URL,
-  }).$extends(withAccelerate());
+  // const prisma = new PrismaClient({
+  //   datasourceUrl: process.env.DATABASE_URL,
+  // }).$extends(withAccelerate());
 
   const post = await prisma.post.create({
     data: {
@@ -25,10 +24,11 @@ export async function POST(req: NextRequest) {
 
 export async function PUT(request: NextRequest) {
   const body = await request.json();
-  const prisma = new PrismaClient({
-    datasourceUrl: process.env.DATABASE_URL,
-  }).$extends(withAccelerate());
-  prisma.post.update({
+
+  // const prisma = new PrismaClient({
+  //   datasourceUrl: process.env.DATABASE_URL,
+  // }).$extends(withAccelerate());
+  await prisma.post.update({
     where: {
       id: body.id,
       autherId: userid,
