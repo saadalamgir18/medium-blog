@@ -5,21 +5,24 @@ export async function POST(req: NextRequest) {
   const request = await req.json();
 
   console.log("body", request);
-  // const prisma = new PrismaClient({
-  //   datasourceUrl: process.env.DATABASE_URL,
-  // }).$extends(withAccelerate());
-
   const post = await prisma.post.create({
     data: {
-      title: request.title,
-      content: request.content,
-      autherId: "dcdsadsadsa",
+      title: request.data.title,
+      content: request.data.content,
+      autherId: request.data.autherId,
+      published: request.data.published,
     },
   });
-  return NextResponse.json({
-    message: "POST request working fine",
-    id: post.id,
-  });
+  if (post) {
+    return NextResponse.json({
+      message: "POST request working fine",
+      id: post.id,
+    });
+  } else {
+    return NextResponse.json({
+      message: "post request not working",
+    });
+  }
 }
 
 export async function PUT(request: NextRequest) {
