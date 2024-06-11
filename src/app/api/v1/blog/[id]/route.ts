@@ -1,12 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "../../../../../../prisma/prisma";
 
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  const id = params.id;
+  const article = await prisma.post.findFirst({
+    where: {
+      id: params.id,
+    },
+  });
+  if (!article) {
+    return NextResponse.json({
+      message: "could not found post",
+    });
+  }
   return NextResponse.json({
-    message: "/v1/blog/id is working fine",
-    id,
+    article,
   });
 }
