@@ -3,7 +3,7 @@ import React from "react";
 import default_avatar from "@/assets/default_avatar.png";
 function AutherData() {
   return (
-    <div className="flex gap-x-4 mt-6">
+    <div className="flex gap-x-4 mt-2">
       <Image
         className="rounded-full"
         src={default_avatar}

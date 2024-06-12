@@ -19,22 +19,24 @@ export default async function Home() {
         return (
           <div
             key={post.id}
-            className="flex w-[800px] space-x-6 justify-between mt-10"
+            className="flex flex-col w-[800px] space-x-6 justify-between mt-10 border-b-2 pb-5"
           >
-            <div className="flex flex-col">
+            <div className="flex">
               <div>
-                <h1 className="text-3xl font-medium">{post.title}</h1>
-                <p className="text-gray-500 text-sm">{post.content}</p>
+                <h1 className="text-xl font-medium">{post.title}</h1>
+                <p className="text-gray-500 text-sm">
+                  {post.content.slice(0, 120)}...
+                </p>
               </div>
-              <AutherData />
+              <Image
+                className="ml-auto"
+                src={default_avatar}
+                height={130}
+                width={130}
+                alt=""
+              />
             </div>
-            <Image
-              className="ml-auto"
-              src={default_avatar}
-              height={142}
-              width={142}
-              alt=""
-            />
+            <AutherData />
           </div>
         );
       })}

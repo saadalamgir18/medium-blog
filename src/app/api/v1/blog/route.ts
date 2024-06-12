@@ -25,23 +25,47 @@ export async function POST(req: NextRequest) {
   }
 }
 
-export async function PUT(request: NextRequest) {
-  const body = await request.json();
+// export async function PUT(request: NextRequest) {
+//   const body = await request.json();
 
-  // const prisma = new PrismaClient({
-  //   datasourceUrl: process.env.DATABASE_URL,
-  // }).$extends(withAccelerate());
-  await prisma.post.update({
-    where: {
-      id: body.id,
-      autherId: userid,
-    },
-    data: {
-      title: body.title,
-      content: body.content,
-    },
-  });
-  return NextResponse.json({
-    message: "PUT request working fine",
-  });
+//   // const prisma = new PrismaClient({
+//   //   datasourceUrl: process.env.DATABASE_URL,
+//   // }).$extends(withAccelerate());
+//   await prisma.post.update({
+//     where: {
+//       id: body.id,
+//       autherId: userid,
+//     },
+//     data: {
+//       title: body.title,
+//       content: body.content,
+//     },
+//   });
+//   return NextResponse.json({
+//     message: "PUT request working fine",
+//   });
+// }
+
+export async function DELETE(request: NextRequest) {
+  const body = await request.json();
+  console.log(body);
+  try {
+    const delPost = await prisma.post.delete({
+      where: {
+        id: body.id,
+      },
+    });
+    console.log(delPost);
+    if (delPost) {
+      return NextResponse.json({
+        message: "Post Deleted successfully!",
+      });
+    }
+  } catch (err) {
+    console.log("eroor happend -------------------", err);
+    return NextResponse.json({
+      message: "Id doest not exist",
+      error: (err as Error).message,
+    });
+  }
 }
