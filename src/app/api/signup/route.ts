@@ -1,12 +1,23 @@
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 import { prisma } from "../../../../prisma/prisma";
+import { SignUpType } from "@/types/zodtypes";
+import jwt from "jsonwebtoken";
+
+const jwtSecret = process.env.NEXTAUTH_SECRET;
+
 export async function POST(request: NextRequest) {
   const body = await request.json();
-  console.log("pass: ", body);
+
+  const { success } = SignUpType.safeParse(body);
+  if (!success) {
+    return NextResponse.json({
+      message: "input is not correct",
+    });
+  }
   const saltRounds = 10;
 
-  const isExist = await prisma.user.findFirst({
+  const isExist = await prisma.user.findUnique({
     where: {
       email: body.data.email,
     },
@@ -25,10 +36,14 @@ export async function POST(request: NextRequest) {
       password: hashedPassword,
     },
   });
-  console.log(user);
   if (user) {
+    const token = await jwt.sign({ id: user.id }, jwtSecret as string);
     return NextResponse.json({
-      id: user.id,
+      token,
+    });
+  } else {
+    return NextResponse.json({
+      message: "There is some error please try again latter ",
     });
   }
 }

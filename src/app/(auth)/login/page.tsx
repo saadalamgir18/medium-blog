@@ -2,18 +2,38 @@
 import { signIn, useSession } from "next-auth/react";
 import { redirect, useRouter } from "next/navigation";
 import { useState } from "react";
-
 import Link from "next/link";
 
+type Token = {
+  token: string;
+};
 export default function Signin() {
-  const session = useSession();
-  if (session.data?.user) {
-    redirect("/");
-  }
+  // const session = useSession();
+  // if (session.data?.user) {
+  //   redirect("/");
+  // }
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [response, setResponse] = useState<Token | null>(null);
 
+  const handleLogin = async () => {
+    const res = await fetch("api/signin", {
+      method: "POSt",
+      body: JSON.stringify({
+        email: email,
+        password: password,
+      }),
+    });
+    setResponse(await res.json());
+    console.log(response);
+
+    if (res.status === 200) {
+      console.log("pushing");
+      router.push("/");
+    }
+    console.log(response);
+  };
   return (
     <div className="min-h-screen flex flex-col justify-center max-w-sm mx-auto gap-y-5">
       <div className="text-center">
@@ -54,15 +74,7 @@ export default function Signin() {
       </div>
       <button
         className="rounded-md w-full bg-black text-white py-2"
-        onClick={async () => {
-          const res = await signIn("credentials", {
-            email: email,
-            password: password,
-            redirect: true,
-          });
-          console.log(res);
-          router.push("/");
-        }}
+        onClick={handleLogin}
       >
         Login
       </button>

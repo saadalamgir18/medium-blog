@@ -2,6 +2,7 @@
 
 import axios from "axios";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React from "react";
 import { useState } from "react";
 
@@ -9,8 +10,9 @@ function Signup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
+  const router = useRouter();
   const SignupHandler = async () => {
-    await axios.post("http://localhost:3000/api/signup", {
+    const response = await axios.post("http://localhost:3000/api/signup", {
       data: {
         name,
         email,
@@ -18,6 +20,9 @@ function Signup() {
       },
       method: "POST",
     });
+    if (response) {
+      router.push("/");
+    }
   };
   return (
     <div className="min-h-screen grid grid-cols-2 gap-8 w-full mx-auto">
